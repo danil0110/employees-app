@@ -22,7 +22,7 @@ class App extends Component {
           id: 2,
           name: 'Ricardo Rodriguez',
           salary: 1500,
-          increase: true,
+          increase: false,
         },
         {
           id: 3,
@@ -34,10 +34,19 @@ class App extends Component {
     };
   }
 
-  deleteItem = (id) => {
+  deleteEmployee = (id) => {
     this.setState(({ data }) => ({
       data: data.filter((item) => item.id !== id),
     }));
+  };
+
+  addEmployee = (name, salary) => {
+    this.setState(({ data }) => {
+      const newId = data[data.length - 1].id + 1;
+      return {
+        data: [...data, { id: newId, name, salary, increase: false }],
+      };
+    });
   };
 
   render() {
@@ -51,8 +60,8 @@ class App extends Component {
           <SearchPanel />
           <AppFilter />
         </div>
-        <EmployeesList employees={data} handleDelete={this.deleteItem} />
-        <EmployeesAddForm />
+        <EmployeesList employees={data} handleDelete={this.deleteEmployee} />
+        <EmployeesAddForm handleAddEmployee={this.addEmployee} />
       </div>
     );
   }
