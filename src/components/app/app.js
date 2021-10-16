@@ -126,9 +126,6 @@ class App extends Component {
 
   confirmDeleteEmployee = (id) => {
     this.setState({ isModal: true, onDeleteId: id });
-
-    const name = this.state.data.find((item) => item.id === id);
-    this.showModal(`Вы уверены, что хотите удалить ${name}?`, () => this.deleteEmployee(id));
   };
 
   showModal = () => {
@@ -154,6 +151,7 @@ class App extends Component {
   hideModal = () => {
     this.setState({ isModal: false, onDeleteId: false });
   };
+
   render() {
     const { data, term, filter } = this.state;
     const visibleData = this.filterEmployees(this.searchEmployees(data, term), filter);
