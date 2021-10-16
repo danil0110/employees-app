@@ -34,10 +34,8 @@ class App extends Component {
           rise: false,
         },
       ],
-      filterBy: {
-        name: '',
-        toggler: null,
-      },
+      term: '',
+      filter: 'all',
     };
   }
 
@@ -81,23 +79,36 @@ class App extends Component {
     return data.filter((item) => item.rise === true).length;
   };
 
-  searchEmployees = (items, filterBy) => {
-    if (!filterBy.name) {
+  searchEmployees = (items, term) => {
+    if (!term) {
       return items;
     }
 
-    const { name, toggler } = filterBy;
+    return items.filter((currItem) => currItem.name.toLowerCase().indexOf(term.toLowerCase()) > -1);
+  };
 
-    return items.filter((currItem) => currItem.name.toLowerCase().indexOf(name.toLowerCase()) > -1);
+  filterEmployees = (items, filter) => {
+    switch (filter) {
+      case 'rise':
+        return items.filter((item) => item.rise === true);
+      case 'salary':
+        return items.filter((item) => item.salary > 1000);
+      default:
+        return items;
+    }
   };
 
   handleUpdateSearch = (term) => {
-    this.setState({ filterBy: { name: term } });
+    this.setState({ term });
+  };
+
+  handleUpdateToggler = (filter) => {
+    this.setState({ filter });
   };
 
   render() {
-    const { data, filterBy } = this.state;
-    const visibleData = this.searchEmployees(data, filterBy);
+    const { data, term, filter } = this.state;
+    const visibleData = this.filterEmployees(this.searchEmployees(data, term), filter);
 
     return (
       <div className='app'>
@@ -110,7 +121,7 @@ class App extends Component {
         <div className='search-panel'>
           <h2>Поиск</h2>
           <SearchPanel handleUpdateSearch={this.handleUpdateSearch} />
-          <AppFilter />
+          <AppFilter handleUpdateToggler={this.handleUpdateToggler} filter={filter} />
         </div>
         <EmployeesList
           employees={visibleData}
