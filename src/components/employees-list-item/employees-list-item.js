@@ -10,7 +10,7 @@ class EmployeesListItem extends Component {
   }
 
   handleInputChange = (e) => {
-    const value = e.target.value;
+    const value = e.target.value.slice(1);
 
     this.setState({ value });
     this.props.handleUpdateSalary(value);
@@ -31,7 +31,7 @@ class EmployeesListItem extends Component {
         <input
           type='text'
           className='list-group-item-input'
-          value={this.state.value}
+          value={`$${this.state.value}`}
           onChange={this.handleInputChange}
         />
         <div className='d-flex justify-content-center align-items-center'>
