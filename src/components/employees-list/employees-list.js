@@ -1,7 +1,7 @@
 import './employees-list.css';
 import EmployeesListItem from '../employees-list-item/employees-list-item';
 
-const EmployeesList = ({ employees, handleDelete, handleToggleProp }) => {
+const EmployeesList = ({ employees, handleDelete, handleToggleProp, handleUpdateSalary }) => {
   return (
     <ul className='app-list list-group'>
       {employees.map((item) => {
@@ -14,6 +14,7 @@ const EmployeesList = ({ employees, handleDelete, handleToggleProp }) => {
             handleToggleProp={(e) =>
               handleToggleProp(id, e.currentTarget.getAttribute('data-toggle'))
             }
+            handleUpdateSalary={(newSalary) => handleUpdateSalary(id, newSalary)}
           />
         );
       })}

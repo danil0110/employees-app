@@ -69,6 +69,18 @@ class App extends Component {
     }));
   };
 
+  updateSalary = (id, salary) => {
+    this.setState(({ data }) => ({
+      data: data.map((item) => {
+        if (item.id === id) {
+          return { ...item, salary };
+        }
+
+        return item;
+      }),
+    }));
+  };
+
   getQuantityOfIncrease = () => {
     const { data } = this.state;
     return data.filter((item) => item.increase === true).length;
@@ -127,6 +139,7 @@ class App extends Component {
           employees={visibleData}
           handleDelete={this.deleteEmployee}
           handleToggleProp={this.toggleProp}
+          handleUpdateSalary={this.updateSalary}
         />
         <EmployeesAddForm handleAddEmployee={this.addEmployee} />
       </div>
