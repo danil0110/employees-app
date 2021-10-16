@@ -34,6 +34,10 @@ class App extends Component {
           rise: false,
         },
       ],
+      filterBy: {
+        name: '',
+        toggler: null,
+      },
     };
   }
 
@@ -77,8 +81,24 @@ class App extends Component {
     return data.filter((item) => item.rise === true).length;
   };
 
+  searchEmployees = (items, filterBy) => {
+    if (!filterBy.name) {
+      return items;
+    }
+
+    const { name, toggler } = filterBy;
+
+    return items.filter((currItem) => currItem.name.toLowerCase().indexOf(name.toLowerCase()) > -1);
+  };
+
+  handleUpdateSearch = (term) => {
+    this.setState({ filterBy: { name: term } });
+  };
+
   render() {
-    const { data } = this.state;
+    const { data, filterBy } = this.state;
+    const visibleData = this.searchEmployees(data, filterBy);
+
     return (
       <div className='app'>
         <AppInfo
@@ -89,11 +109,11 @@ class App extends Component {
 
         <div className='search-panel'>
           <h2>Поиск</h2>
-          <SearchPanel />
+          <SearchPanel handleUpdateSearch={this.handleUpdateSearch} />
           <AppFilter />
         </div>
         <EmployeesList
-          employees={data}
+          employees={visibleData}
           handleDelete={this.deleteEmployee}
           handleToggleProp={this.toggleProp}
         />
