@@ -1,11 +1,13 @@
 import './app.css';
 
+import { Component } from 'react';
+
 import AppInfo from '../app-info/app-info';
 import SearchPanel from '../search-panel/search-panel';
 import AppFilter from '../app-filter/app-filter';
 import EmployeesList from '../employees-list/employees-list';
 import EmployeesAddForm from '../employees-add-form/employees-add-form';
-import { Component } from 'react';
+import Modal from '../modal/modal';
 
 class App extends Component {
   constructor(props) {
@@ -36,12 +38,16 @@ class App extends Component {
       ],
       term: '',
       filter: 'all',
+      onDeleteId: null,
+      isModal: false,
     };
   }
 
   deleteEmployee = (id) => {
     this.setState(({ data }) => ({
       data: data.filter((item) => item.id !== id),
+      isModal: false,
+      onDeleteId: null,
     }));
   };
 
@@ -118,6 +124,36 @@ class App extends Component {
     this.setState({ filter });
   };
 
+  confirmDeleteEmployee = (id) => {
+    this.setState({ isModal: true, onDeleteId: id });
+
+    const name = this.state.data.find((item) => item.id === id);
+    this.showModal(`Вы уверены, что хотите удалить ${name}?`, () => this.deleteEmployee(id));
+  };
+
+  showModal = () => {
+    const { data, isModal, onDeleteId } = this.state;
+
+    if (!isModal) {
+      return;
+    }
+
+    const { name } = data.find((item) => item.id === onDeleteId);
+
+    return (
+      <div className='overlay' onClick={this.hideModal}>
+        <Modal
+          textContent={`Вы уверены, что хотите удалить ${name}?`}
+          callback={() => this.deleteEmployee(onDeleteId)}
+          handleHideModal={this.hideModal}
+        />
+      </div>
+    );
+  };
+
+  hideModal = () => {
+    this.setState({ isModal: false, onDeleteId: false });
+  };
   render() {
     const { data, term, filter } = this.state;
     const visibleData = this.filterEmployees(this.searchEmployees(data, term), filter);
@@ -137,11 +173,14 @@ class App extends Component {
         </div>
         <EmployeesList
           employees={visibleData}
+          handleConfirmDelete={this.confirmDeleteEmployee}
           handleDelete={this.deleteEmployee}
           handleToggleProp={this.toggleProp}
           handleUpdateSalary={this.updateSalary}
         />
         <EmployeesAddForm handleAddEmployee={this.addEmployee} />
+
+        {this.showModal()}
       </div>
     );
   }

@@ -1,7 +1,13 @@
 import './employees-list.css';
 import EmployeesListItem from '../employees-list-item/employees-list-item';
 
-const EmployeesList = ({ employees, handleDelete, handleToggleProp, handleUpdateSalary }) => {
+const EmployeesList = ({
+  employees,
+  handleConfirmDelete,
+  handleDelete,
+  handleToggleProp,
+  handleUpdateSalary,
+}) => {
   return (
     <ul className='app-list list-group'>
       {employees.map((item) => {
@@ -10,11 +16,11 @@ const EmployeesList = ({ employees, handleDelete, handleToggleProp, handleUpdate
           <EmployeesListItem
             key={id}
             {...itemProps}
-            handleDelete={() => handleDelete(id)}
             handleToggleProp={(e) =>
               handleToggleProp(id, e.currentTarget.getAttribute('data-toggle'))
             }
             handleUpdateSalary={(newSalary) => handleUpdateSalary(id, newSalary)}
+            handleConfirmDelete={() => handleConfirmDelete(id)}
           />
         );
       })}
