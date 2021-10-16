@@ -20,7 +20,14 @@ class EmployeesAddForm extends Component {
   handleFormSubmit = (e) => {
     e.preventDefault();
 
-    const { name, salary } = this.state;
+    let { name, salary } = this.state;
+    name = name.trim();
+    salary = salary.trim();
+
+    if (!name || name.length < 4 || !salary) {
+      return;
+    }
+
     this.props.handleAddEmployee(name, salary);
     this.setState({
       name: '',
